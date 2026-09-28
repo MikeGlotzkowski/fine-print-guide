@@ -72,7 +72,7 @@ ${body}
 <footer class="site-footer">
   <div class="wrap">
     <p><strong>General information, not advice.</strong> Policies differ by insurer and by state. What your own policy says is what counts, so use this site to know what to look for and what to ask.</p>
-    <p class="footer-links"><a href="${r('/basics/')}">Basics</a> · <a href="${r('/situations/')}">Start from your situation</a> · <a href="${r('/map/')}">The whole map</a> · <a href="${r('/perils/')}">Perils</a> · <a href="${r('/read-your-policy/')}">Reading your policy</a> · <a href="${r('/about/')}">About</a></p>
+    <p class="footer-links"><a href="${r('/basics/')}">Basics</a> · <a href="${r('/situations/')}">Start from your situation</a> · <a href="${r('/map/')}">The whole map</a> · <a href="${r('/tree/')}">The insurance tree</a> · <a href="${r('/perils/')}">Perils</a> · <a href="${r('/read-your-policy/')}">Reading your policy</a> · <a href="${r('/about/')}">About</a></p>
     <p class="muted">Content last reviewed ${SITE.lastReviewed}.</p>
   </div>
 </footer>

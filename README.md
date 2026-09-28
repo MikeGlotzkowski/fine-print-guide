@@ -9,6 +9,7 @@ Live: https://mikeglotzkowski.github.io/fine-print-guide/ · Planned domain: **f
 - **I have a policy:** 24 policy pages (13 personal, 11 business). Each one opens with a one-sentence answer, then "usually covered" and "usually not covered" side by side, then real-life examples. The coverage parts (A–F and so on) fold open, and each page ends with a checklist for your own policy.
 - **Something happened:** "Is it covered?" has 43 common situations with a yes / no / it-depends answer. You can filter them by keyword or by area.
 - **Start from my situation:** step-by-step guides for newcomers to the US, renting, buying a home or car, travel, starting a business and hiring. Each step says whether it's required by law, required by someone else, or optional.
+- **The insurance tree:** a fold-out tree from personal and commercial lines through property, liability and people, down to single perils such as hurricane storm surge or ice dams, with the usual verdict for each.
 - **Supporting pages:** the basics in six ideas, the 16 named perils with examples, how to read a declarations page, the whole map, a glossary, and search.
 - **Terms explained in place:** tap any dotted-underlined word to see its definition without leaving the page.
 

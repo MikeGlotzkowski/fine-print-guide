@@ -42,6 +42,22 @@
     group.parentNode.insertBefore(btn, group);
   });
 
+  // ---------------------------------------------------------- tree controls
+  var tools = document.querySelector('.tree-tools');
+  if (tools) {
+    var branches = document.querySelectorAll('.tree-root details');
+    [['Open all', true], ['Close all', false]].forEach(function (cfg) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'expand-all';
+      b.textContent = cfg[0];
+      b.addEventListener('click', function () {
+        branches.forEach(function (d) { d.open = cfg[1]; });
+      });
+      tools.appendChild(b);
+    });
+  }
+
   // ---------------------------------------------------------- term definitions
   var dataEl = document.getElementById('term-data');
   var terms = dataEl ? JSON.parse(dataEl.textContent) : {};

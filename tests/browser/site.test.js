@@ -140,3 +140,22 @@ test('unknown URLs get the 404 page with working links', async () => {
   await p.click('main a[href$="search/"]');
   assert.match(p.url(), /\/search\/$/);
 });
+
+test('the insurance tree drills down from lines to single perils', async () => {
+  const p = await page();
+  await p.goto(BASE + 'tree/');
+  const personal = p.locator('.tree-root > .tn').first();
+  // Only the two top branches start open.
+  assert.equal(await p.locator('.tree-root details[open]').count(), 2);
+  assert.equal(await personal.getByText('Storm surge', { exact: true }).isVisible(), false);
+  for (const label of ['Property', 'What can cause damage (perils)', 'Wind', 'Tropical cyclones']) {
+    await personal.locator('summary', { hasText: label }).first().click();
+  }
+  const surge = personal.locator('.tn-leaf', { has: p.getByText('Storm surge', { exact: true }) });
+  assert.equal(await surge.isVisible(), true);
+  assert.match(await surge.textContent(), /Usually not covered/);
+  await p.getByRole('button', { name: 'Open all' }).click();
+  assert.equal(await p.locator('.tree-root details:not([open])').count(), 0);
+  await p.getByRole('button', { name: 'Close all' }).click();
+  assert.equal(await p.locator('.tree-root details[open]').count(), 0);
+});

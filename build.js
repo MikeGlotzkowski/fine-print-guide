@@ -17,6 +17,7 @@ import { scenarios } from './src/content/scenarios.js';
 import { perils, excludedCauses } from './src/content/perils.js';
 import { basics, claimSteps } from './src/content/basics.js';
 import { declarations } from './src/content/declarations.js';
+import { tree } from './src/content/tree.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(ROOT, 'dist');
@@ -423,6 +424,52 @@ ${d.sample.map((row) => `<div class="dec-row"><span class="dec-num">${row.n}</sp
   searchIndex.push({ t: 'How to read your policy', u: page, k: 'Guide', d: 'The declarations page line by line, and how to check if something is covered.', x: 'declarations dec page endorsement exclusions conditions definitions ' + d.parts.map((p) => p.name).join(' ') });
 }
 
+// ---------------------------------------------------------------- tree
+
+function renderTree() {
+  const page = 'tree/';
+  const { fmt, r, terms } = ctx(page);
+  // Summaries hold plain text only: links inside a <summary> would be nested
+  // inside its button role. Links for a branch go in its first fold-out line.
+  const plain = (t) => esc(stripFmt(t.replace(/\*\*(.+?)\*\*/g, '\u0000$1\u0001'))).replace(/\u0000/g, '<strong>').replace(/\u0001/g, '</strong>');
+  const badge = (v) => (v ? ` <span class="verdict verdict-${v} tn-v"><span aria-hidden="true">${VERDICT[v].icon}</span> ${VERDICT[v].label}</span>` : '');
+  const node = (n, depth) => {
+    if (!n.kids) {
+      const label = n.href ? `<a href="${r(n.href)}">${esc(n.t)}</a>` : esc(n.t);
+      return `<li class="tn tn-leaf"><span class="tn-label">${label}</span>${badge(n.v)}${n.d ? `<span class="tn-d">${fmt(n.d)}</span>` : ''}</li>`;
+    }
+    return `<li class="tn tn-branch tn-depth-${depth}"><details${depth === 0 ? ' open' : ''}>
+<summary><span class="tn-label">${esc(n.t)}</span>${badge(n.v)}${n.d ? `<span class="tn-d">${plain(n.d)}</span>` : ''}</summary>
+<ul class="tree">${n.href ? `<li class="tn tn-link"><a href="${r(n.href)}">Read the page about ${esc(n.t.toLowerCase())}</a></li>` : ''}${n.kids.map((k) => node(k, depth + 1)).join('')}</ul>
+</details></li>`;
+  };
+  const body = `<header class="page-head"><h1>The insurance tree</h1><p class="lead">${fmt(
+    'How US insurance is organized, from the two big families down to single causes of damage. Open a branch to go one level finer.'
+  )}</p></header>
+<section class="callout tree-key" aria-labelledby="key-h">
+<h2 id="key-h">The one split that explains most of it</h2>
+<dl class="facts">
+<div><dt>Property</dt><dd>${fmt('Pays for **your own** things when they\'re damaged. What\'s covered depends on the cause, the [[peril]].')}</dd></div>
+<div><dt>Liability</dt><dd>${fmt('Pays when **you harm someone else** or their things, plus your legal defense.')}</dd></div>
+<div><dt>People</dt><dd>${fmt('Pays for health, lost income or death. Not tied to any object.')}</dd></div>
+</dl>
+<p class="note">Both personal and commercial lines split the same way. Under each Property branch you'll find the perils: wind, water, fire and the rest, down to single events like a hurricane\'s storm surge. The verdicts there are for a standard home policy (HO-3).</p>
+</section>
+<p class="tree-tools"></p>
+<ul class="tree tree-root">${tree.map((n) => node(n, 0)).join('')}</ul>`;
+  addPage(page, {
+    title: 'The insurance tree',
+    description: 'A fold-out tree of US insurance: personal and commercial lines, property, liability and people, down to perils like tropical cyclones and winter storms.',
+    crumbs: [],
+    body,
+    terms,
+  });
+  const flat = [];
+  const walk = (n) => { flat.push(n.t); (n.kids || []).forEach(walk); };
+  tree.forEach(walk);
+  searchIndex.push({ t: 'The insurance tree', u: page, k: 'Guide', d: 'Personal and commercial lines, property, liability and people, down to single perils.', x: flat.join(' ') });
+}
+
 // ---------------------------------------------------------------- map
 
 function renderMap() {
@@ -442,6 +489,7 @@ function renderMap() {
   const body = `<header class="page-head"><h1>The whole map</h1><p class="lead">${fmt(
     'US insurance splits into two big families. **Personal lines** protect you, your family and your things. **Commercial lines** protect a business. Inside each, policies cover either **property** (your stuff), **liability** (harm you cause others) or **people** (health, income, life).'
   )}</p></header>
+<p>${fmt('To see how the pieces split into property, liability and people, and down to single perils, open [the insurance tree](/tree/).')}</p>
 <div class="map">${col('personal', personal)}${col('business', business)}</div>`;
   addPage(page, { title: 'The whole map', description: 'Every type of personal and business insurance on one page.', crumbs: [], body, terms });
 }
@@ -486,7 +534,7 @@ function renderHome() {
 </section>
 
 <section class="home-links" aria-label="More">
-<p>${fmt('New to all this? Start with [the whole map](/map/) of personal and business insurance, or learn [how to read your policy](/read-your-policy/).')}</p>
+<p>${fmt('New to all this? See how it all fits together in [the insurance tree](/tree/), browse [the whole map](/map/) of policies, or learn [how to read your policy](/read-your-policy/).')}</p>
 </section>`;
   addPage(page, { title: SITE.name, description: SITE.description, crumbs: [], body, terms, bodyClass: 'home' });
 }
@@ -574,6 +622,7 @@ export function build() {
   renderGlossary();
   renderBasics();
   renderDeclarations();
+  renderTree();
   renderMap();
   renderSearch();
   renderAbout();

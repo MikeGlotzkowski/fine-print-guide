@@ -11,7 +11,7 @@ const ids = (s) => [...s.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
 
 test('builds the expected sections', () => {
   assert.ok(pages.length >= 40, `only ${pages.length} pages`);
-  for (const url of ['', 'personal/', 'business/', 'personal/home/', 'business/bop/', 'situations/new-to-the-us/', 'is-it-covered/', 'perils/', 'glossary/', 'basics/', 'read-your-policy/', 'map/', 'search/', 'about/']) {
+  for (const url of ['', 'personal/', 'business/', 'personal/home/', 'business/bop/', 'situations/new-to-the-us/', 'is-it-covered/', 'perils/', 'glossary/', 'basics/', 'read-your-policy/', 'map/', 'tree/', 'search/', 'about/']) {
     assert.ok(html.has(url), `missing page /${url}`);
   }
   assert.ok(fs.existsSync(path.join(DIST, '404.html')));

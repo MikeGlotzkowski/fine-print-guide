@@ -359,6 +359,31 @@ a.term:hover { color: var(--accent); }
 .primer-list li::marker { font-family: var(--serif); color: var(--accent); font-weight: 700; }
 .primer-list span { display: block; color: var(--ink-soft); }
 
+/* Insurance tree */
+.tree { list-style: none; margin: 0; padding: 0 0 0 1.1rem; border-left: 1px solid var(--line-strong); }
+.tree-root { padding-left: 0; border-left: 0; }
+.tn { margin: 0; position: relative; }
+.tree > .tn::before { content: ''; position: absolute; left: -1.1rem; top: 1.25rem; width: 0.8rem; border-top: 1px solid var(--line-strong); }
+.tree-root > .tn::before { display: none; }
+.tn-leaf { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.1rem 0.6rem; padding: 0.5rem 0; }
+.tn > details > summary { display: grid; grid-template-columns: 1rem minmax(0, 1fr); column-gap: 0.6rem; align-items: baseline; padding: 0.5rem 0; }
+.tn > details > summary::after { grid-column: 1; grid-row: 1; margin: 0; padding: 0; text-align: center; font-size: 1.1rem; }
+.tn > details > summary > * { grid-column: 2; justify-self: start; }
+.tn > details > summary .tn-d { padding-left: 0; }
+.tn-label { font-weight: 650; }
+.tn-leaf .tn-label { font-weight: 550; }
+.tn-leaf { padding-left: 1.6rem; }
+.tn-d { flex-basis: 100%; color: var(--muted); font-size: 0.95rem; padding-left: 1.6rem; }
+.tn-leaf .tn-d { padding-left: 0; }
+.tn-v { font-size: 0.72rem; }
+.tn-link { padding: 0.2rem 0 0.2rem 1.6rem; font-size: 0.93rem; }
+.tree-root > .tn { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 0.3rem 1rem 0.5rem; margin-bottom: 1rem; }
+.tree-root > .tn > details > summary .tn-label { font-family: var(--serif); font-size: 1.35rem; }
+.tn-depth-1 > details > summary .tn-label { font-size: 1.1rem; }
+.tree-tools { display: flex; gap: 1rem; min-height: 1.2rem; }
+@media (max-width: 560px) { .tree { padding-left: 0.75rem; } .tree > .tn::before { left: -0.75rem; width: 0.55rem; } .tree-root > .tn { padding: 0.3rem 0.75rem 0.5rem; } }
+.tree-key .facts { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+
 /* Map */
 .map { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 2rem; }
 .map-col h2 { margin-top: 1rem; }
