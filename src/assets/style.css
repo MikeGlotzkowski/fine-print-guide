@@ -115,7 +115,7 @@ button:hover, .button:hover { filter: brightness(1.1); }
 
 @media (max-width: 760px) {
   .header-inner { gap: 0.45rem 1rem; }
-  .main-nav ul { flex-wrap: nowrap; gap: 0 0.85rem; }
+  .main-nav ul { flex-wrap: wrap; gap: 0.15rem 0.9rem; }
   .main-nav a { font-size: 0.92rem; white-space: nowrap; }
   .search { margin-left: 0; width: 100%; }
   .search input { flex: 1; width: auto; }
