@@ -4,6 +4,7 @@ import { esc, relUrl } from './format.js';
 const NAV = [
   { href: '/personal/', label: 'Personal' },
   { href: '/business/', label: 'Business' },
+  { href: '/tree/', label: 'Tree' },
   { href: '/is-it-covered/', label: 'Is it covered?' },
   { href: '/glossary/', label: 'Glossary' },
 ];

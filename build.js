@@ -528,6 +528,14 @@ function renderHome() {
   </div>
 </section>
 
+<section class="tree-teaser" aria-labelledby="tree-h">
+<div>
+<h2 id="tree-h">See how it all fits together</h2>
+<p>${fmt('The insurance tree goes from personal and business lines, through property, liability and people, down to single perils like a hurricane\'s storm surge or a burst pipe.')}</p>
+</div>
+<p><a class="button" href="${r('/tree/')}">Open the insurance tree</a></p>
+</section>
+
 <section class="primer" aria-labelledby="primer-h">
 <h2 id="primer-h">Six ideas that explain most policies</h2>
 <ol class="primer-list">${basics.map((b) => `<li><a href="${r(`/basics/#${b.id}`)}"><strong>${esc(b.label)}</strong></a><span>${fmt(b.short)}</span></li>`).join('')}</ol>

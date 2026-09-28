@@ -120,13 +120,13 @@ button:hover, .button:hover { filter: brightness(1.1); }
   .search { margin-left: 0; width: 100%; }
   .search input { flex: 1; width: auto; }
 }
-@media (max-width: 380px) { .main-nav ul { gap: 0 0.6rem; } .main-nav a { font-size: 0.86rem; } }
+@media (max-width: 400px) { .main-nav ul { gap: 0 0.55rem; } .main-nav a { font-size: 0.84rem; } }
 input[type='search']::-webkit-search-cancel-button { filter: grayscale(1); opacity: 0.6; }
 input:focus-visible { outline-width: 2px; outline-offset: 1px; }
 
 /* ------------------------------------------------------------ page */
 main { padding-bottom: 3rem; overflow-wrap: break-word; }
-main > *:not(.doors):not(.map):not(.examples):not(.peril-grid):not(.cover-split):not(.with-toc) { max-width: var(--measure); }
+main > *:not(.doors):not(.tree-teaser):not(.map):not(.examples):not(.peril-grid):not(.cover-split):not(.with-toc) { max-width: var(--measure); }
 article > * { max-width: var(--measure); }
 
 /* Policy pages: content plus a sticky "On this page" list on wide screens */
@@ -353,6 +353,9 @@ a.term:hover { color: var(--accent); }
 .quick a { display: inline-block; padding: 0.3rem 0.7rem; border: 1px solid var(--line-strong); border-radius: 999px; text-decoration: none; font-size: 0.93rem; color: var(--ink); background: var(--bg); }
 .quick a:hover { border-color: var(--accent); color: var(--accent); }
 .door-more { margin-top: auto; font-size: 0.93rem; color: var(--muted); }
+.tree-teaser { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 2rem; background: var(--accent-soft); border-radius: var(--radius); padding: 0.4rem 1.3rem 0.3rem; margin-bottom: 2.5rem; max-width: none !important; }
+.tree-teaser > div { flex: 1 1 24rem; }
+.tree-teaser h2 { margin-top: 0.9rem; font-size: 1.3rem; }
 .primer { border-top: 1px solid var(--line); }
 .primer-list { padding-left: 1.3rem; }
 .primer-list li { margin-bottom: 0.7rem; }
