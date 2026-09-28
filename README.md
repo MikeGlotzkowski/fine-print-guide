@@ -2,7 +2,7 @@
 
 A free, plain-language guide to US insurance: what personal and business policies cover, what they leave out, and what codes like HO-3, DP-3 or "Coverage A" mean.
 
-Planned domain: **fineprintguide.com** (not registered yet).
+Live: https://mikeglotzkowski.github.io/fine-print-guide/ · Planned domain: **fineprintguide.com** (not registered yet).
 
 ## What's in it
 
@@ -36,7 +36,7 @@ npm run test:browser                       # axe accessibility (light + dark), 3
 
 `dist/` is plain static files. All links are relative, so it works at a domain root or in a sub-folder.
 
-- **GitHub Pages:** in Settings > Pages, set the source to "GitHub Actions". `.github/workflows/pages.yml` then builds and publishes on every push to `main`.
+- **GitHub Pages:** `.github/workflows/pages.yml` builds on every push to `main` and publishes to the `gh-pages` branch, which Pages serves (Settings > Pages > Deploy from a branch: `gh-pages`).
 - **Netlify / Cloudflare Pages / Vercel:** build command `node build.js`, output directory `dist`. `netlify.toml` is included.
 - **Anywhere else:** run `npm run build` and upload `dist/`.
 
