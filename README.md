@@ -38,7 +38,8 @@ npm run test:browser                       # axe accessibility (light + dark), 3
 `dist/` is plain static files. All links are relative, so it works at a domain root or in a sub-folder.
 
 - **GitHub Pages:** `.github/workflows/pages.yml` builds on every push to `main` and publishes to the `gh-pages` branch, which Pages serves (Settings > Pages > Deploy from a branch: `gh-pages`).
-- **Netlify / Cloudflare Pages / Vercel:** build command `node build.js`, output directory `dist`. `netlify.toml` is included.
+- **Cloudflare Pages:** Workers & Pages > Create > Pages > Connect to Git, pick this repo, framework preset "None", build command `node build.js`, output directory `dist`, variable `SITE_URL=https://fineprintguide.com`. Every push to `main` redeploys. `src/static/_headers` sets security and cache headers.
+- **Netlify / Vercel:** build command `node build.js`, output directory `dist`. `netlify.toml` is included.
 - **Anywhere else:** run `npm run build` and upload `dist/`.
 
 Optional build settings:
