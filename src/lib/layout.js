@@ -12,12 +12,70 @@ const NAV = [
 // Wraps page content in the shared document shell.
 // `terms` holds the glossary entries used on the page; they are embedded so
 // term links can show a definition in place without loading anything.
-export function layout({ page, title, description, body, crumbs = [], terms = [], bodyClass = '', base }) {
+// Search engines show about 155 characters of a description; cut longer ones
+// at a word boundary rather than mid-word.
+export function metaDescription(text) {
+  const s = String(text || '').replace(/\s+/g, ' ').trim();
+  if (s.length <= 160) return s;
+  const cut = s.slice(0, 157);
+  return cut.slice(0, cut.lastIndexOf(' ')).replace(/[,;:.\s]+$/, '') + '…';
+}
+
+// schema.org data: the site itself on the home page, a breadcrumb trail
+// elsewhere. Google uses the trail in place of the URL in results.
+function structuredData({ page, title, crumbs }) {
+  const abs = (to) => SITE.url + to;
+  if (page === '') {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: SITE.name,
+      url: abs('/'),
+      description: SITE.description,
+      inLanguage: 'en-US',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: { '@type': 'EntryPoint', urlTemplate: abs('/search/?q={search_term_string}') },
+        'query-input': 'required name=search_term_string',
+      },
+    };
+  }
+  const here = crumbs.find((c) => !c.href)?.label || title;
+  const trail = [{ label: 'Home', href: '/' }, ...crumbs.filter((c) => c.href), { label: here, href: '/' + page }];
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: trail.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, item: abs(c.href) })),
+  };
+}
+
+export function layout({ page, title, description, body, crumbs = [], terms = [], bodyClass = '', base, noindex = false, ogType }) {
   // `base` switches to root-absolute links (used by 404.html, which hosts
   // serve from any depth).
   const r = base ? (to) => base + to.replace(/^\//, '') : (to) => relUrl(page, to);
   const fullTitle = page === '' && !base ? `${SITE.name}: ${SITE.tagline}` : `${title} · ${SITE.name}`;
-  const canonical = SITE.url ? `<link rel="canonical" href="${SITE.url}/${page}">` : '';
+  const desc = metaDescription(description || SITE.description);
+  const url = `${SITE.url}/${page}`;
+  // 404.html is served at any path, so it gets no canonical or social URL.
+  const head = [
+    noindex ? '<meta name="robots" content="noindex">' : '',
+    SITE.url && !base ? `<link rel="canonical" href="${url}">` : '',
+    `<meta property="og:site_name" content="${esc(SITE.name)}">`,
+    `<meta property="og:title" content="${esc(page === '' ? SITE.name : title)}">`,
+    `<meta property="og:description" content="${esc(desc)}">`,
+    `<meta property="og:type" content="${ogType || (page === '' ? 'website' : 'article')}">`,
+    '<meta property="og:locale" content="en_US">',
+    SITE.url && !base ? `<meta property="og:url" content="${url}">` : '',
+    SITE.url ? `<meta property="og:image" content="${SITE.url}/og-image.png">` : '',
+    SITE.url ? '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">' : '',
+    SITE.url ? `<meta property="og:image:alt" content="${esc(SITE.name)}: ${esc(SITE.tagline)}">` : '',
+    '<meta name="twitter:card" content="summary_large_image">',
+    SITE.url && !base && !noindex
+      ? `<script type="application/ld+json">${JSON.stringify(structuredData({ page, title, crumbs })).replace(/</g, '\\u003c')}</script>`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
   const current = '/' + page.split('/')[0] + '/';
 
   const nav = NAV.map(
@@ -43,13 +101,11 @@ export function layout({ page, title, description, body, crumbs = [], terms = []
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(fullTitle)}</title>
-<meta name="description" content="${esc(description || SITE.description)}">
-${canonical}
-<meta property="og:title" content="${esc(fullTitle)}">
-<meta property="og:description" content="${esc(description || SITE.description)}">
-<meta property="og:type" content="website">
+<meta name="description" content="${esc(desc)}">
+${head}
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="${r('/favicon.svg')}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="${r('/apple-touch-icon.png')}">
 <link rel="stylesheet" href="${r('/assets/style.css')}">
 <script src="${r('/assets/app.js')}" defer></script>
 </head>

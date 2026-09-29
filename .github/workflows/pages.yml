@@ -19,10 +19,11 @@ jobs:
         with:
           node-version: 22
       # BASE_PATH only affects 404.html; every other link is relative.
+      # SITE_URL stays at its default (fineprintguide.com), so this copy's
+      # canonical links send search engines to the main site.
       - run: node build.js
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
-          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
       - name: Push dist/ to gh-pages
         run: |
           cd dist

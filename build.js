@@ -4,6 +4,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 import { SITE } from './src/site.js';
@@ -176,7 +177,8 @@ ${relSituations.map((s) => `<li><a href="${r(`/situations/${s.slug}/`)}">${esc(s
     .join('')}</ul></nav>`;
   const body = `<div class="with-toc"><article class="policy">${sections.join('\n')}</article>${aside}</div>`;
   addPage(page, {
-    title: p.name,
+    // Matches how people search ("what does renters insurance cover").
+    title: `${p.name}: what's covered`,
     description: stripFmt(p.lead),
     crumbs: [{ label: line.label, href: line.href }, { label: p.name }],
     body,
@@ -234,7 +236,7 @@ function renderSituations() {
 <ul class="situation-list">${situations
       .map((s) => `<li><a href="${r(`/situations/${s.slug}/`)}">${esc(s.title)}</a><span>${fmt(s.teaser)}</span></li>`)
       .join('')}</ul>`;
-    addPage(idx, { title: 'Start from your situation', description: 'Insurance guides by life situation.', crumbs: [], body, terms });
+    addPage(idx, { title: 'Start from your situation', description: 'Step-by-step insurance checklists for moving to the US, renting, buying a home or car, traveling, starting a business and hiring staff.', crumbs: [], body, terms });
   }
 
   const REQ = {
@@ -269,8 +271,8 @@ ${s.surprises?.length ? `<section class="surprises" aria-labelledby="sur-h"><h2 
 ${s.links?.length ? `<section class="related" aria-labelledby="lk-h"><h2 id="lk-h">Official sources</h2>${list(s.links, fmt)}</section>` : ''}
 </article>`;
     addPage(page, {
-      title: s.title,
-      description: stripFmt(s.teaser),
+      title: `${s.title}: insurance checklist`,
+      description: stripFmt(s.intro),
       crumbs: [{ label: 'Situations', href: '/situations/' }, { label: s.title }],
       body,
       terms,
@@ -373,7 +375,7 @@ ${letters
       .join('')}</dl></section>`
   )
   .join('')}`;
-  addPage(page, { title: 'Glossary', description: 'Insurance terms explained in plain English, with examples.', crumbs: [], body, terms: () => [] });
+  addPage(page, { title: 'Glossary', description: 'Insurance terms explained in plain English with examples: deductible, premium, actual cash value, endorsement, named peril and more.', crumbs: [], body, terms: () => [] });
   glossary.forEach((g) => searchIndex.push({ t: g.term, u: `${page}#${g.slug}`, k: 'Term', d: stripFmt(g.def), x: g.aka || '' }));
 }
 
@@ -491,7 +493,7 @@ function renderMap() {
   )}</p></header>
 <p>${fmt('To see how the pieces split into property, liability and people, and down to single perils, open [the insurance tree](/tree/).')}</p>
 <div class="map">${col('personal', personal)}${col('business', business)}</div>`;
-  addPage(page, { title: 'The whole map', description: 'Every type of personal and business insurance on one page.', crumbs: [], body, terms });
+  addPage(page, { title: 'The whole map', description: 'Every type of US personal and business insurance on one page, grouped by what it protects, with a one-line summary of each.', crumbs: [], body, terms });
 }
 
 // ---------------------------------------------------------------- home
@@ -564,7 +566,7 @@ function renderSearch() {
 <ol id="search-results" class="search-results"></ol>
 <section class="search-fallback"><h2>All topics</h2><ul class="columns">${all.map((a) => `<li><a href="${r(a.u)}">${esc(a.t)}</a></li>`).join('')}</ul>
 <p>Or browse the <a href="${r('/glossary/')}">glossary</a> and <a href="${r('/is-it-covered/')}">common situations</a>.</p></section>`;
-  addPage(page, { title: 'Search', description: 'Search every policy, guide, situation and glossary term on the site.', crumbs: [], body, terms: () => [], bodyClass: 'search-body' });
+  addPage(page, { title: 'Search', description: 'Search every insurance policy, situation guide, covered-or-not example and glossary term on Fine Print Guide.', crumbs: [], body, terms: () => [], bodyClass: 'search-body', noindex: true });
 }
 
 function renderAbout() {
@@ -594,6 +596,7 @@ function render404() {
     base,
     title: 'Page not found',
     description: 'Page not found.',
+    noindex: true,
     body: `<header class="page-head"><h1>That page isn't here</h1><p class="lead">It may have moved. Try <a href="${base}search/">searching</a> or start from the <a href="${base}">home page</a>.</p></header>`,
   });
 }
@@ -604,6 +607,16 @@ function write(file, content) {
   const full = path.join(OUT, file);
   fs.mkdirSync(path.dirname(full), { recursive: true });
   fs.writeFileSync(full, content);
+}
+
+// Date of the last commit that touched the content or templates, for the
+// sitemap's <lastmod>. Falls back to today outside a git checkout.
+function contentDate() {
+  try {
+    const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', 'src', 'build.js'], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(out)) return out;
+  } catch {}
+  return new Date().toISOString().slice(0, 10);
 }
 
 function copyDir(src, dest) {
@@ -645,8 +658,12 @@ export function build() {
   copyDir(path.join(ROOT, 'src/static'), OUT);
 
   if (SITE.url) {
-    const urls = pages.map((p) => `<url><loc>${SITE.url}/${p.page}</loc></url>`).join('');
-    write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`);
+    const lastmod = contentDate();
+    const urls = pages
+      .filter((p) => !p.noindex)
+      .map((p) => `<url><loc>${SITE.url}/${p.page}</loc><lastmod>${lastmod}</lastmod></url>`)
+      .join('\n');
+    write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
     write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITE.url}/sitemap.xml\n`);
   } else {
     write('robots.txt', 'User-agent: *\nAllow: /\n');

@@ -6,3 +6,7 @@
 
 /assets/*
   Cache-Control: public, max-age=3600, must-revalidate
+
+# Keep the pages.dev copy out of search results; fineprintguide.com is canonical.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex

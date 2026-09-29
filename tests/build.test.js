@@ -99,3 +99,39 @@ test('no leftover inline markup in the output', () => {
     assert.doesNotMatch(text, /\[\[|\]\]|\*\*/, `raw markup on /${url}`);
   }
 });
+
+test('search engine tags: unique titles and descriptions, canonical, social, structured data', () => {
+  const titles = new Map();
+  const descs = new Map();
+  for (const [url, s] of html) {
+    const title = s.match(/<title>([^<]+)<\/title>/)[1];
+    const desc = s.match(/<meta name="description" content="([^"]+)">/)[1];
+    assert.ok(!titles.has(title), `/${url} and /${titles.get(title)} share the title "${title}"`);
+    assert.ok(!descs.has(desc), `/${url} and /${descs.get(desc)} share a description`);
+    titles.set(title, url);
+    descs.set(desc, url);
+    const len = desc.replace(/&[#a-z0-9]+;/g, '_').length;
+    assert.ok(len >= 70 && len <= 160, `description on /${url} is ${len} characters`);
+    assert.match(s, new RegExp(`<link rel="canonical" href="https://fineprintguide\\.com/${url}">`), `canonical on /${url}`);
+    for (const prop of ['og:title', 'og:description', 'og:url', 'og:image']) assert.match(s, new RegExp(`property="${prop}" content="[^"]+"`), `${prop} on /${url}`);
+    if (url === 'search/') {
+      assert.match(s, /<meta name="robots" content="noindex">/);
+      continue;
+    }
+    assert.doesNotMatch(s, /name="robots"/, `/${url} should be indexable`);
+    const ld = JSON.parse(s.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+    assert.equal(ld['@type'], url === '' ? 'WebSite' : 'BreadcrumbList', url);
+    if (ld.itemListElement) assert.equal(ld.itemListElement.at(-1).item, `https://fineprintguide.com/${url}`);
+  }
+  assert.match(fs.readFileSync(path.join(DIST, '404.html'), 'utf8'), /<meta name="robots" content="noindex">/);
+});
+
+test('sitemap lists every indexable page and robots.txt points to it', () => {
+  const xml = fs.readFileSync(path.join(DIST, 'sitemap.xml'), 'utf8');
+  const locs = [...xml.matchAll(/<loc>https:\/\/fineprintguide\.com\/([^<]*)<\/loc>/g)].map((m) => m[1]);
+  const expected = [...html.keys()].filter((u) => u !== 'search/');
+  assert.deepEqual([...locs].sort(), expected.sort());
+  assert.equal((xml.match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g) || []).length, locs.length);
+  assert.match(fs.readFileSync(path.join(DIST, 'robots.txt'), 'utf8'), /^Sitemap: https:\/\/fineprintguide\.com\/sitemap\.xml$/m);
+  for (const f of ['og-image.png', 'apple-touch-icon.png']) assert.ok(fs.existsSync(path.join(DIST, f)), f);
+});
