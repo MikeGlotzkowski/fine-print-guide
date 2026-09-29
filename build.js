@@ -19,6 +19,7 @@ import { perils, excludedCauses } from './src/content/perils.js';
 import { basics, claimSteps } from './src/content/basics.js';
 import { declarations } from './src/content/declarations.js';
 import { tree } from './src/content/tree.js';
+import { questions } from './src/content/questions.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(ROOT, 'dist');
@@ -156,10 +157,12 @@ ${p.more
 
   const related = (p.related || []).map((s) => policyMap.get(s)).filter(Boolean);
   const relSituations = situations.filter((s) => s.steps.some((st) => (st.policies || []).includes(p.slug)));
-  if (related.length || relSituations.length) {
+  const relQuestions = questions.filter((q) => q.policies.includes(p.slug));
+  if (related.length || relSituations.length || relQuestions.length) {
     sections.push(`<section class="related" aria-labelledby="rel-h"><h2 id="rel-h">Related</h2><ul>
 ${related.map((rp) => `<li>${policyLink(rp.slug, r)} <span class="muted">${fmt(rp.teaser)}</span></li>`).join('')}
 ${relSituations.map((s) => `<li><a href="${r(`/situations/${s.slug}/`)}">${esc(s.title)}</a> <span class="muted">Guide</span></li>`).join('')}
+${relQuestions.map((q) => `<li><a href="${r(`/questions/${q.slug}/`)}">${esc(q.q)}</a> <span class="muted">Question</span></li>`).join('')}
 </ul></section>`);
   }
 
@@ -170,7 +173,7 @@ ${relSituations.map((s) => `<li><a href="${r(`/situations/${s.slug}/`)}">${esc(s
     ...(p.tables || []).map((t, i) => t.heading && [`table-${i}`, t.heading]),
     p.more?.length && ['more-h', 'Good to know'],
     p.check?.length && ['check-h', 'Check your own policy'],
-    (related.length || relSituations.length) && ['rel-h', 'Related'],
+    (related.length || relSituations.length || relQuestions.length) && ['rel-h', 'Related'],
   ].filter(Boolean);
   const aside = `<nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ul>${toc
     .map(([id, label]) => `<li><a href="#${id}">${esc(label)}</a></li>`)
@@ -278,6 +281,61 @@ ${s.links?.length ? `<section class="related" aria-labelledby="lk-h"><h2 id="lk-
       terms,
     });
     searchIndex.push({ t: s.title, u: page, k: 'Guide', d: stripFmt(s.teaser), x: [s.intro, ...s.steps.map((x) => x.title), ...(s.keywords || [])].map(stripFmt).join(' ') });
+  }
+}
+
+// ---------------------------------------------------------------- questions
+
+function renderQuestions() {
+  const idx = 'questions/';
+  const areas = [...new Set(questions.map((q) => q.area))];
+  {
+    const { fmt, r, terms } = ctx(idx);
+    const body = `<header class="page-head"><h1>Common questions</h1><p class="lead">Short answers to the questions people ask most about US insurance, with the reasons behind them.</p></header>
+${areas
+  .map(
+    (a, i) => `<section aria-labelledby="qa-${i}"><h2 id="qa-${i}">${esc(a)}</h2><ul class="situation-list">${questions
+      .filter((q) => q.area === a)
+      .map((q) => `<li><a href="${r(`/questions/${q.slug}/`)}">${esc(q.q)}</a><span>${fmt(q.short)}</span></li>`)
+      .join('')}</ul></section>`
+  )
+  .join('')}`;
+    addPage(idx, { title: 'Common insurance questions', description: 'Plain, short answers to common US insurance questions: renters insurance, flood cover, rental cars, HMO vs PPO, open enrollment and more.', crumbs: [], body, terms });
+  }
+
+  const block = (b, fmt) => (Array.isArray(b) ? list(b, fmt) : `<p>${fmt(b)}</p>`);
+  for (const q of questions) {
+    const page = `questions/${q.slug}/`;
+    const { fmt, r, terms } = ctx(page);
+    const sections = q.sections
+      .map((s, i) => `<section aria-labelledby="q-${i + 1}"><h2 id="q-${i + 1}">${esc(s.h)}</h2>${s.body.map((b) => block(b, fmt)).join('')}</section>`)
+      .join('\n');
+    const guides = (q.situations || []).map((sl) => {
+      const s = situations.find((x) => x.slug === sl);
+      if (!s) throw new Error(`Unknown situation "${sl}" in question ${q.slug}`);
+      return `<li><a href="${r(`/situations/${s.slug}/`)}">${esc(s.title)}</a> <span class="muted">Guide</span></li>`;
+    });
+    const others = questions.filter((o) => o !== q && (o.area === q.area || o.policies.some((p) => q.policies.includes(p)))).slice(0, 4);
+    const related = [
+      ...q.policies.map((sl) => `<li>${policyLink(sl, r)} <span class="muted">${fmt(policyMap.get(sl).teaser)}</span></li>`),
+      ...guides,
+      ...others.map((o) => `<li><a href="${r(`/questions/${o.slug}/`)}">${esc(o.q)}</a> <span class="muted">Question</span></li>`),
+    ];
+    const body = `<article class="question"><header class="page-head"><p class="eyebrow">Question</p><h1>${esc(q.q)}</h1></header>
+<section class="callout" aria-labelledby="short-h"><h2 id="short-h">Short answer</h2><p>${fmt(q.short)}</p></section>
+${sections}
+<section class="related" aria-labelledby="rel-h"><h2 id="rel-h">Read more</h2><ul>${related.join('')}</ul></section>
+${q.links?.length ? `<section class="related" aria-labelledby="lk-h"><h2 id="lk-h">Official sources</h2>${list(q.links, fmt)}</section>` : ''}
+<p class="note">This is general information about how US policies usually work. Your own policy's wording and your state's rules decide the details.</p>
+</article>`;
+    addPage(page, {
+      title: q.q,
+      description: q.desc || stripFmt(q.short),
+      crumbs: [{ label: 'Questions', href: '/questions/' }, { label: q.q }],
+      body,
+      terms,
+    });
+    searchIndex.push({ t: q.q, u: page, k: 'Question', d: stripFmt(q.short), x: q.sections.flatMap((s) => [s.h, ...s.body.flat()]).map(stripFmt).join(' ') });
   }
 }
 
@@ -544,6 +602,7 @@ function renderHome() {
 </section>
 
 <section class="home-links" aria-label="More">
+<p>${fmt('Have a specific question? Start with [common questions](/questions/), like [whether renters insurance is required](/questions/is-renters-insurance-required/).')}</p>
 <p>${fmt('New to all this? See how it all fits together in [the insurance tree](/tree/), browse [the whole map](/map/) of policies, or learn [how to read your policy](/read-your-policy/).')}</p>
 </section>`;
   addPage(page, { title: SITE.name, description: SITE.description, crumbs: [], body, terms, bodyClass: 'home' });
@@ -554,7 +613,7 @@ function renderHome() {
 function renderSearch() {
   const page = 'search/';
   const { r } = ctx(page);
-  const all = [...policies.map((p) => ({ t: p.name, u: policyUrl(p) })), ...situations.map((s) => ({ t: s.title, u: `/situations/${s.slug}/` }))].sort((a, b) =>
+  const all = [...policies.map((p) => ({ t: p.name, u: policyUrl(p) })), ...situations.map((s) => ({ t: s.title, u: `/situations/${s.slug}/` })), ...questions.map((q) => ({ t: q.q, u: `/questions/${q.slug}/` }))].sort((a, b) =>
     a.t.localeCompare(b.t)
   );
   const body = `<header class="page-head"><h1>Search</h1></header>
@@ -638,6 +697,7 @@ export function build() {
   renderHub('business', business, 'Insurance for a business, from a one-person consultancy to a shop with staff. Most small businesses start with a [[bop]] and add what their work needs.');
   policies.forEach(renderPolicy);
   renderSituations();
+  renderQuestions();
   renderScenarios();
   renderPerils();
   renderGlossary();

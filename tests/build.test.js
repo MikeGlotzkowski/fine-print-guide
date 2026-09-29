@@ -135,3 +135,15 @@ test('sitemap lists every indexable page and robots.txt points to it', () => {
   assert.match(fs.readFileSync(path.join(DIST, 'robots.txt'), 'utf8'), /^Sitemap: https:\/\/fineprintguide\.com\/sitemap\.xml$/m);
   for (const f of ['og-image.png', 'apple-touch-icon.png']) assert.ok(fs.existsSync(path.join(DIST, f)), f);
 });
+
+test('question pages lead with a short answer and link onward', () => {
+  const qs = [...html.keys()].filter((u) => /^questions\/[a-z0-9-]+\/$/.test(u));
+  assert.ok(qs.length >= 10, `only ${qs.length} question pages`);
+  const index = html.get('questions/');
+  for (const url of qs) {
+    const s = html.get(url);
+    assert.ok(s.indexOf('id="short-h"') < s.indexOf('id="q-1"'), `short answer not first on /${url}`);
+    assert.match(s, /id="rel-h"/, `no Read more on /${url}`);
+    assert.ok(index.includes(`href="../${url.replace('questions/', '')}"`) || index.includes(`href="./${url.replace('questions/', '')}"`) || index.includes(url.replace('questions/', '')), `/${url} missing from the index`);
+  }
+});
