@@ -453,7 +453,7 @@ function renderTree() {
 <div><dt>Liability</dt><dd>${fmt('Pays when **you harm someone else** or their things, plus your legal defense.')}</dd></div>
 <div><dt>People</dt><dd>${fmt('Pays for health, lost income or death. Not tied to any object.')}</dd></div>
 </dl>
-<p class="note">Both personal and commercial lines split the same way. Under each Property branch you'll find the perils: wind, water, fire and the rest, down to single events like a hurricane\'s storm surge. The verdicts there are for a standard home policy (HO-3).</p>
+<p class="note">Both personal and commercial lines split the same way. Under each Property branch you'll find the perils: wind, water, fire and the rest, down to single events like a hurricane\'s storm surge. The verdicts there are for a standard home policy (HO-3) under personal lines, and a standard commercial property policy under commercial lines.</p>
 </section>
 <p class="tree-tools"></p>
 <ul class="tree tree-root">${tree.map((n) => node(n, 0)).join('')}</ul>`;
