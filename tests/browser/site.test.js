@@ -68,6 +68,21 @@ test('no page scrolls sideways on a 360px phone', async () => {
   assert.deepEqual(wide, []);
 });
 
+test('table titles span the full width on a 360px phone', async () => {
+  const p = await page({ viewport: { width: 360, height: 740 }, isMobile: true });
+  const squeezed = [];
+  for (const { url } of htmlPages()) {
+    await p.goto(BASE + url);
+    const bad = await p.evaluate(() =>
+      [...document.querySelectorAll('table.stack caption')]
+        .filter((c) => c.getBoundingClientRect().width < c.closest('table').getBoundingClientRect().width - 1)
+        .map((c) => c.textContent)
+    );
+    for (const t of bad) squeezed.push(`/${url}: "${t}"`);
+  }
+  assert.deepEqual(squeezed, []);
+});
+
 test('scenario filter narrows the list by words and by area', async () => {
   const p = await page();
   await p.goto(BASE + 'is-it-covered/');
