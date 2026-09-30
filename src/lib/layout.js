@@ -6,6 +6,7 @@ const NAV = [
   { href: '/business/', label: 'Business' },
   { href: '/tree/', label: 'Insurance tree' },
   { href: '/is-it-covered/', label: 'Is it covered?' },
+  { href: '/questions/', label: 'Questions' },
   { href: '/glossary/', label: 'Glossary' },
 ];
 
@@ -117,7 +118,7 @@ ${head}
     <nav class="main-nav" aria-label="Main"><ul>${nav}</ul></nav>
     <form class="search" role="search" action="${r('/search/')}" method="get">
       <label for="q" class="visually-hidden">Search topics</label>
-      <input id="q" name="q" type="search" placeholder="Search, e.g. flood" autocomplete="off">
+      <input id="q" name="q" type="search" placeholder="e.g. flood" autocomplete="off">
       <button type="submit">Search</button>
     </form>
   </div>
