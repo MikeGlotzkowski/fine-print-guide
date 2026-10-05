@@ -324,4 +324,99 @@ export const questions = [
     situations: ['new-to-the-us'],
     links: ['[HealthCare.gov: the fee for not having coverage](https://www.healthcare.gov/fees/fee-for-not-being-covered/)'],
   },
+
+  {
+    slug: 'does-renters-insurance-cover-theft-outside-home',
+    q: 'Does renters insurance cover things stolen outside my home?',
+    area: 'Home and renting',
+    short: 'Usually yes. A standard renters policy covers your belongings almost anywhere, so a laptop stolen from a café, a bike taken from a rack or things stolen from your car are covered, minus your deductible.',
+    desc: 'Usually yes. Renters insurance covers your belongings almost anywhere: a laptop stolen at a café, a bike from a rack, or things taken from your car.',
+    sections: [
+      {
+        h: 'What is covered away from home',
+        body: [
+          'The [[personal-property]] part of a standard renters policy follows your things, not just your apartment. Theft is a covered cause wherever it happens, including:',
+          [
+            'Items stolen from your car. Car insurance doesn\'t cover these; renters insurance does.',
+            'A bike stolen from a rack or a bag taken while you travel.',
+            'Things you keep in a storage unit, though some policies pay less for property kept somewhere you don\'t live.',
+          ],
+        ],
+      },
+      {
+        h: 'Where it falls short',
+        body: [
+          [
+            'Your [[deductible]] comes off first, so a $300 bike with a $500 deductible pays nothing.',
+            'Jewelry, watches and some other valuables have a low theft limit, often around $1,500 in total, unless you list them as [[scheduled-property]].',
+            'Simply losing something isn\'t theft and usually isn\'t covered.',
+            'Damage to the car itself, like a broken window, is a car insurance claim under [[comprehensive]].',
+          ],
+          'Report the theft to the police and keep the report number. Insurers usually ask for it.',
+        ],
+      },
+    ],
+    policies: ['renters', 'auto'],
+    situations: ['renting'],
+  },
+
+  {
+    slug: 'do-i-need-dental-and-vision-insurance',
+    q: 'Do I need dental and vision insurance in the US?',
+    area: 'Health',
+    short: 'It\'s optional for adults. Most health plans don\'t cover adult dental care or glasses, so they\'re sold as separate, fairly small plans. Children\'s dental and vision are a standard benefit.',
+    desc: 'Optional for adults. Most US health plans leave out adult dental and glasses, so they are sold as separate small plans. Children\'s coverage is standard.',
+    sections: [
+      {
+        h: 'Why it\'s separate',
+        body: [
+          'Marketplace and most job-based health plans must cover dental and vision care for children, but not for adults. Adults usually get it through a separate dental plan and a separate vision plan, either from an employer or bought alongside a [[marketplace]] health plan.',
+        ],
+      },
+      {
+        h: 'What these plans usually pay',
+        body: [
+          [
+            '**Dental:** checkups and cleanings are often fully covered. Fillings and bigger work like crowns are partly covered, sometimes only after a waiting period, and most plans cap what they pay in a year, often at $1,000 to $2,000.',
+            '**Vision:** a yearly eye exam plus an allowance toward glasses or contact lenses.',
+          ],
+        ],
+      },
+      {
+        h: 'Is it worth it?',
+        body: [
+          'If your employer offers it, it\'s usually cheap and worth taking. On your own, compare a year of premiums with what you expect to spend: dental plans help most with regular care, less with big unexpected work because of the yearly cap. Eye injuries and eye diseases are usually covered by your health plan, not a vision plan.',
+          'Dental "discount plans" are not insurance. They get you a lower price from certain dentists but pay nothing themselves.',
+        ],
+      },
+    ],
+    policies: ['health'],
+    situations: ['new-to-the-us'],
+    links: ['[HealthCare.gov: dental coverage](https://www.healthcare.gov/coverage/dental-coverage/)'],
+  },
+
+  {
+    slug: 'what-is-a-certificate-of-insurance',
+    q: 'What is a certificate of insurance?',
+    area: 'Business',
+    short: 'A one-page summary that proves your business has insurance: which policies, with which insurer, the limits and the dates. Clients and landlords often ask for one before you start work.',
+    sections: [
+      {
+        h: 'What it shows',
+        body: [
+          'A [[coi|certificate of insurance]] lists your insurer, policy numbers, policy dates and limits for coverages like general liability, car, workers\' compensation and professional liability. In the US it\'s usually on a standard form called ACORD 25.',
+          'You get it from your insurance agent, broker or insurer\'s website, usually free and within a day.',
+        ],
+      },
+      {
+        h: 'A certificate isn\'t coverage by itself',
+        body: [
+          'It only describes your policy. If a client wants to be covered by your policy for claims from your work, the policy needs an [[additional-insured]] endorsement naming them. Writing their name on the certificate alone doesn\'t do that.',
+          'Before you send one, check that the limits match what the contract asks for and that the dates cover the whole job.',
+        ],
+      },
+    ],
+    policies: ['general-liability', 'professional-liability', 'workers-comp'],
+    situations: ['starting-a-business'],
+  },
 ];
