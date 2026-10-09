@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { SITE } from './src/site.js';
 import { layout } from './src/lib/layout.js';
 import { esc, relUrl, makeFormatter } from './src/lib/format.js';
+import { makeAutolinker } from './src/lib/autolink.js';
 import { glossary } from './src/content/glossary.js';
 import { personal } from './src/content/personal.js';
 import { business } from './src/content/business.js';
@@ -25,6 +26,22 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(ROOT, 'dist');
 
 const glossaryMap = new Map(glossary.map((g) => [g.slug, g]));
+const autolink = makeAutolinker(glossary);
+const TERM_CAP = 10;
+
+// The definition text shown in a popover, cut to its first sentence(s) so a
+// long entry stays a glance, not a page.
+function shortDef(text) {
+  const plain = String(text || '')
+    .replace(/\*\*(.+?)\*\*\*/g, '$1')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\[\[([a-z0-9-]+)(?:\|([^\]]+))?\]\]/g, (_, s, l) => l || glossaryMap.get(s)?.term || s)
+    .replace(/\s+/g, ' ')
+    .trim();
+  const parts = plain.match(/[^.!?]+[.!?]+(?:\s|$)/g);
+  const two = ((parts ? parts.slice(0, 2).join(' ') : plain).trim());
+  return two.length > 220 ? two.slice(0, 187).replace(/\s+\S*$/, '') + '…' : two;
+}
 const LINES = {
   personal: { label: 'Personal', href: '/personal/', title: 'Personal insurance' },
   business: { label: 'Business', href: '/business/', title: 'Business insurance' },
@@ -41,9 +58,15 @@ const VERDICT = {
 
 const pages = [];
 const searchIndex = [];
+// page -> Set of slugs already linked explicitly via [[slug]].
+const usedByPage = new Map();
 
 function addPage(page, opts) {
-  pages.push({ page, ...opts });
+  pages.push({
+    ...opts,
+    page,
+    _post: (body) => autolink(body, page, usedByPage.get(page) || new Set()),
+  });
 }
 
 // Every page gets its own formatter so term links are relative to it and the
@@ -53,6 +76,9 @@ function ctx(page) {
   const fmt = makeFormatter({ page, glossary: glossaryMap, onTerm: (s) => used.add(s) });
   const r = (to) => relUrl(page, to);
   const terms = () => [...used].map((s) => glossaryMap.get(s));
+  // Remember the set so the autolink pass can treat explicit [[slug]] links
+  // as that term's occurrence, and so their definitions get embedded.
+  usedByPage.set(page, used);
   return { fmt, r, terms, used };
 }
 
@@ -709,8 +735,15 @@ export function build() {
   renderAbout();
 
   for (const p of pages) {
-    const terms = typeof p.terms === 'function' ? p.terms() : p.terms || [];
-    write(path.join(p.page, 'index.html'), layout({ ...p, terms }));
+    const body = p._post ? p._post(p.body) : p.body;
+    const declared = typeof p.terms === 'function' ? p.terms() : p.terms || [];
+    const usedSlugs = [...(usedByPage.get(p.page) || [])];
+    const bySlug = new Map(declared.map((t) => [t.slug, t]));
+    if (usedSlugs.length < TERM_CAP) {
+      for (const s of usedSlugs) if (!bySlug.has(s)) bySlug.set(s, glossaryMap.get(s));
+    }
+    const terms = [...bySlug.values()].map((t) => ({ ...t, def: shortDef(t.def) }));
+    write(path.join(p.page, 'index.html'), layout({ ...p, body, terms }));
   }
   write('404.html', render404());
   write('search.json', JSON.stringify(searchIndex));

@@ -98,7 +98,7 @@
     var more = document.createElement('p');
     var a = document.createElement('a');
     a.href = link.getAttribute('href');
-    a.textContent = 'More in the glossary';
+    a.textContent = 'Read more \u2192';
     more.appendChild(a);
     var close = document.createElement('button');
     close.type = 'button';
@@ -113,11 +113,20 @@
     pop.appendChild(more);
     document.body.appendChild(pop);
 
+    // Place the popover under the link, clamped left and right. If it would
+    // run off the bottom of the viewport, flip it above the link; then clamp
+    // vertically so it always stays fully on screen.
     var r = link.getBoundingClientRect();
+    var vw = document.documentElement.clientWidth;
+    var vh = window.innerHeight;
     var w = pop.offsetWidth;
-    var left = Math.min(window.scrollX + r.left, window.scrollX + document.documentElement.clientWidth - w - 12);
+    var h = pop.offsetHeight;
+    var left = Math.min(window.scrollX + r.left, window.scrollX + vw - w - 12);
     pop.style.left = Math.max(window.scrollX + 12, left) + 'px';
-    pop.style.top = window.scrollY + r.bottom + 6 + 'px';
+    var below = r.bottom + 6;
+    var above = r.top - h - 6;
+    var top = (below + h > vh - 8 && above > 8) ? above : below;
+    pop.style.top = Math.max(window.scrollY + 8, Math.min(window.scrollY + top, window.scrollY + vh - h - 8)) + 'px';
 
     opener = link;
     link.setAttribute('aria-expanded', 'true');
