@@ -307,8 +307,11 @@ tbody th { font-weight: 600; }
 .gl-ex { color: var(--ink-soft); font-size: 0.95rem; }
 
 /* Term links and the in-place definition */
-a.term { color: inherit; text-decoration: underline dotted var(--accent); text-decoration-thickness: 2px; text-underline-offset: 0.22em; }
+a.term { color: inherit; text-decoration: underline dotted var(--accent); text-decoration-thickness: 2px; text-underline-offset: 0.22em; position: relative; }
 a.term:hover { color: var(--accent); }
+/* A 44px touch target without disturbing the text flow: the pseudo-element is
+   invisible and centered on the word, so inline layout is unchanged. */
+a.term::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; min-width: 44px; min-height: 44px; }
 .term-pop {
   position: absolute; z-index: 20; max-width: min(22rem, calc(100vw - 2rem)); background: var(--surface);
   border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 0.75rem 0.9rem 0.6rem;
@@ -316,7 +319,8 @@ a.term:hover { color: var(--accent); }
 }
 .term-pop p { margin: 0 0 0.5rem; }
 .term-pop .tp-term { font-weight: 700; padding-right: 1.5rem; }
-.term-pop .tp-close { position: absolute; top: 0.35rem; right: 0.4rem; background: none; border: 0; color: var(--muted); font-size: 1.2rem; padding: 0.1rem 0.4rem; }
+.term-pop .tp-close { position: absolute; top: 0.15rem; right: 0.2rem; background: none; border: 0; color: var(--muted); font-size: 1.2rem; padding: 0.4rem 0.6rem; }
+.term-pop .tp-close::after { content: ''; position: absolute; inset: 0; min-width: 44px; min-height: 44px; }
 
 /* ------------------------------------------------------------ basics */
 .ideas { padding-left: 0; list-style: none; counter-reset: idea; }
