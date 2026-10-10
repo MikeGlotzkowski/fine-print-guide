@@ -2,7 +2,9 @@
 
 A free, plain-language guide to US insurance: what personal and business policies cover, what they leave out, and what codes like HO-3, DP-3 or "Coverage A" mean.
 
-Live: https://mikeglotzkowski.github.io/fine-print-guide/ · Planned domain: **fineprintguide.com** (not registered yet).
+**Read the guide at [fineprintguide.com](https://fineprintguide.com/).**
+
+A backup copy runs on [GitHub Pages](https://mikeglotzkowski.github.io/fine-print-guide/); its canonical links point search engines to fineprintguide.com.
 
 ## What's in it
 
