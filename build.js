@@ -18,6 +18,7 @@ import { situations } from './src/content/situations.js';
 import { scenarios } from './src/content/scenarios.js';
 import { perils, excludedCauses } from './src/content/perils.js';
 import { basics, claimSteps } from './src/content/basics.js';
+import { firstDays } from './src/content/first-days.js';
 import { declarations } from './src/content/declarations.js';
 import { tree } from './src/content/tree.js';
 import { questions } from './src/content/questions.js';
@@ -478,12 +479,44 @@ function renderBasics() {
     .join('')}</ol>
 <section aria-labelledby="claim-h"><h2 id="claim-h">How a claim works</h2>
 <ol class="claim-steps">${claimSteps.map((c) => `<li><strong>${esc(c.title)}.</strong> ${fmt(c.body)}</li>`).join('')}</ol>
+<p>Something has just happened? See what to do, in order, in [the first 72 hours after a loss](/first-72-hours/).</p>
 </section>
 <section class="callout" aria-labelledby="help-h"><h2 id="help-h">If something goes wrong</h2>
 <p>${fmt('If a claim is denied and you think it shouldn\'t be, ask the insurer to explain the denial in writing and point to the policy wording they rely on. You can appeal inside the company. Every state has an insurance department that takes complaints for free; find yours through the [NAIC state map](https://content.naic.org/state-insurance-departments).')}</p>
 </section>`;
   addPage(page, { title: 'The basics', description: 'Premium, deductible, limit, covered causes and exclusions, and replacement cost vs. actual cash value, explained with examples.', crumbs: [], body, terms });
   searchIndex.push({ t: 'The basics in six ideas', u: page, k: 'Guide', d: 'Premium, deductible, limits, what\'s covered, and how payouts are calculated.', x: basics.map((b) => b.title + ' ' + stripFmt(b.short)).join(' ') + ' claim denied complaint' });
+}
+
+// ---------------------------------------------------------------- first 72 hours
+
+function renderFirstDays() {
+  const page = `${firstDays.slug}/`;
+  const { fmt, r, terms } = ctx(page);
+  const block = (b) => (Array.isArray(b) ? list(b, fmt) : `<p>${fmt(b)}</p>`);
+  const sections = firstDays.sections
+    .map((s, i) => `<section aria-labelledby="fd-${i + 1}"><h2 id="fd-${i + 1}">${esc(s.h)}</h2>${s.body.map(block).join('')}</section>`)
+    .join('\n');
+  const related = firstDays.related.map((x) => `<li><a href="${r(x.href)}">${esc(x.label)}</a> <span class="muted">${esc(x.note)}</span></li>`).join('');
+  const body = `<article class="guide"><header class="page-head"><p class="eyebrow">${esc(firstDays.eyebrow)}</p><h1>${esc(firstDays.title)}</h1><p class="lead">${fmt(firstDays.intro)}</p></header>
+${sections}
+<section class="related" aria-labelledby="fd-rel-h"><h2 id="fd-rel-h">Read more</h2><ul>${related}</ul></section>
+<p class="note">${fmt(firstDays.note)}</p>
+</article>`;
+  addPage(page, {
+    title: firstDays.title,
+    description: firstDays.description,
+    crumbs: [],
+    body,
+    terms,
+  });
+  searchIndex.push({
+    t: firstDays.title,
+    u: page,
+    k: 'Guide',
+    d: firstDays.description,
+    x: [firstDays.intro, ...firstDays.sections.map((s) => s.h + ' ' + s.body.flat().join(' '))].map(stripFmt).join(' '),
+  });
 }
 
 // ---------------------------------------------------------------- declarations page
@@ -628,6 +661,7 @@ function renderHome() {
 </section>
 
 <section class="home-links" aria-label="More">
+<p>${fmt('Something has happened? Start with [the first 72 hours after a loss](/first-72-hours/): who to call, what to photograph and the deadlines that matter.')}</p>
 <p>${fmt('Have a specific question? Start with [common questions](/questions/), like [whether renters insurance is required](/questions/is-renters-insurance-required/).')}</p>
 <p>${fmt('New to all this? See how it all fits together in [the insurance tree](/tree/), browse [the whole map](/map/) of policies, or learn [how to read your policy](/read-your-policy/).')}</p>
 </section>`;
@@ -728,6 +762,7 @@ export function build() {
   renderPerils();
   renderGlossary();
   renderBasics();
+  renderFirstDays();
   renderDeclarations();
   renderTree();
   renderMap();
