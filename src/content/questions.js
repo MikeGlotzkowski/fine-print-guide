@@ -419,4 +419,97 @@ export const questions = [
     policies: ['general-liability', 'professional-liability', 'workers-comp'],
     situations: ['starting-a-business'],
   },
+
+  {
+    slug: 'does-health-insurance-work-in-another-state',
+    q: 'Does my health insurance work in another state?',
+    area: 'Health',
+    short: 'For emergencies, yes. For routine care, it depends on the plan type: HMO and EPO plans usually cover only their local network, while a PPO with a national network travels better.',
+    desc: 'Emergencies are covered anywhere. Routine care in another state depends on your plan: HMOs and EPOs usually stay local, national PPOs travel better.',
+    sections: [
+      {
+        h: 'Emergencies are covered',
+        body: [
+          'Plans must cover emergency care at any hospital, in or out of network, at your in-network cost sharing. Federal law also protects you from most surprise bills from out-of-network providers in an emergency.',
+        ],
+      },
+      {
+        h: 'Routine care depends on the network',
+        body: [
+          [
+            '**[[hmo|HMO]] and [[epo|EPO]] plans** usually cover non-emergency care only from their own [[network]], which is often one state or region.',
+            '**[[ppo|PPO]] plans** cover out-of-network care at a higher cost, and some have a national network.',
+            'Many plans include urgent care and telehealth visits that work while you travel. Check your plan\'s documents or call the number on your card before you go.',
+          ],
+        ],
+      },
+      {
+        h: 'If you\'re moving, not visiting',
+        body: ['A move to a new state usually means a new plan. Moving gives you a [[sep|special enrollment period]], usually 60 days, to pick one there.'],
+      },
+    ],
+    policies: ['health', 'travel'],
+    situations: ['traveling'],
+    links: ['[CMS: protections against surprise bills](https://www.cms.gov/nosurprises)'],
+  },
+
+  {
+    slug: 'workers-comp-for-one-employee',
+    q: 'Do I need workers\' comp if I have only one employee?',
+    area: 'Business',
+    short: 'In most states, yes: workers\' compensation is required as soon as you hire your first employee. A few states only require it above a small number of employees, and Texas lets most employers opt out.',
+    desc: 'In most states, yes. Workers\' comp is required from your first employee. A few states start at a small headcount, and Texas lets most employers opt out.',
+    sections: [
+      {
+        h: 'What the rules usually look like',
+        body: [
+          [
+            'Most states require coverage from the first employee, part-time workers included.',
+            'Some states only require it once you have a few employees, and some have stricter rules for construction work.',
+            'Owners, partners and LLC members can often leave themselves out, but the rules vary.',
+            'Independent contractors usually don\'t count, but states look at how the work is actually done, not what the contract calls it.',
+          ],
+          'Check your state\'s workers\' compensation agency for the exact threshold. Going without required coverage can bring fines and leave you paying an injured worker\'s costs yourself.',
+        ],
+      },
+      {
+        h: 'What it pays',
+        body: ['[[workers-comp|Workers\' compensation]] pays an injured employee\'s medical bills and part of their lost wages, whoever was at fault. Most policies also include [[employers-liability|employer\'s liability]], which covers you if an employee sues over a work injury.'],
+      },
+    ],
+    policies: ['workers-comp'],
+    situations: ['hiring-employees', 'starting-a-business'],
+    links: ['[US Department of Labor: state workers\' compensation officials](https://www.dol.gov/agencies/owcp/wc)'],
+  },
+
+  {
+    slug: 'does-renters-insurance-cover-roommates',
+    q: 'Does my renters insurance cover my roommate?',
+    area: 'Home and renting',
+    short: 'No, not unless they\'re named on your policy. Renters insurance covers you and relatives who live with you, so a roommate needs their own policy or to be added by name.',
+    desc: 'No, not unless they are named on your policy. Renters insurance covers you and relatives living with you, so a roommate needs their own policy.',
+    sections: [
+      {
+        h: 'Who a renters policy covers',
+        body: [
+          'A standard renters policy covers the named policyholder, a spouse, and relatives or children under 21 who live in the household. A roommate who isn\'t related to you isn\'t covered, for their belongings or for damage they cause.',
+        ],
+      },
+      {
+        h: 'Your options',
+        body: [
+          [
+            '**Separate policies:** the simplest choice. Each person picks their own limits and claims don\'t affect the other.',
+            '**One shared policy:** some insurers let you add a roommate by name. It can be cheaper, but a claim by either of you goes on the shared record, and splitting a payout can get awkward.',
+          ],
+        ],
+      },
+      {
+        h: 'Liability still matters',
+        body: ['If your roommate leaves the bath running and floods the apartment below, your policy won\'t cover their [[liability]]. Their own renters policy would.'],
+      },
+    ],
+    policies: ['renters'],
+    situations: ['renting'],
+  },
 ];
