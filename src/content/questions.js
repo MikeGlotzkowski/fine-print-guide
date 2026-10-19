@@ -512,4 +512,105 @@ export const questions = [
     policies: ['renters'],
     situations: ['renting'],
   },
+
+  {
+    slug: 'health-insurance-after-leaving-a-job',
+    q: 'What happens to my health insurance when I leave my job?',
+    area: 'Health',
+    short: 'Your job-based plan usually ends on your last day or at the end of that month. You can then keep it through COBRA at the full price, or pick a new plan on the Marketplace within 60 days.',
+    desc: 'Job-based health cover usually ends on your last day or at month end. Keep it through COBRA at full price, or pick a Marketplace plan within 60 days.',
+    sections: [
+      {
+        h: 'When the coverage ends',
+        body: [
+          'Ask HR for the exact date. Many plans end on your last day of work, others at the end of that month. Book appointments and refill prescriptions before then if you can.',
+        ],
+      },
+      {
+        h: 'Your options',
+        body: [
+          [
+            '**[[cobra|COBRA]]:** keep the same plan, usually for up to 18 months, but you pay the full premium plus a small fee, often several times what you paid as an employee. You have 60 days to sign up, and coverage is backdated to the day the old plan ended. It applies to employers with 20 or more staff; many states have similar rules for smaller ones.',
+            '**A [[marketplace]] plan:** losing job-based coverage opens a [[sep|special enrollment period]] of 60 days. With a lower income, help with premiums can make this much cheaper than COBRA.',
+            '**A spouse\'s or partner\'s plan:** losing your coverage usually lets you join their employer plan mid-year, typically within 30 days.',
+            '**Medicaid:** if your income drops low enough, you can apply any time.',
+          ],
+        ],
+      },
+      {
+        h: 'Watch the gap',
+        body: ['Compare COBRA\'s price with a Marketplace plan before the 60 days run out. Missing both windows can leave you uninsured until the next [[open-enrollment]].'],
+      },
+    ],
+    policies: ['health'],
+    situations: ['new-to-the-us'],
+    links: ['[US Department of Labor: COBRA continuation coverage](https://www.dol.gov/general/topic/health-plans/cobra)', '[HealthCare.gov: losing job-based coverage](https://www.healthcare.gov/unemployed/coverage/)'],
+  },
+
+  {
+    slug: 'does-renters-insurance-cover-water-damage',
+    q: 'Does renters insurance cover water damage?',
+    area: 'Home and renting',
+    short: 'It covers your belongings when water damage is sudden and comes from inside the building, like a burst pipe or an upstairs neighbor\'s overflowing tub. It doesn\'t cover flooding from outside or slow leaks.',
+    desc: 'Yes for sudden water from inside the building, like a burst pipe or a neighbor\'s overflowing tub. No for floods from outside or slow, ongoing leaks.',
+    sections: [
+      {
+        h: 'Usually covered',
+        body: [
+          [
+            'A burst or leaking pipe, water heater or appliance that suddenly soaks your things.',
+            'Water from another unit, like a neighbor\'s overflowing bath. Your policy pays for your belongings; their insurer may later try to recover it from them.',
+            'A hotel and meals if the apartment is unlivable while it\'s repaired ([[loss-of-use]]).',
+            'Damage you cause to the building or a neighbor\'s unit, under your [[personal-liability]].',
+          ],
+        ],
+      },
+      {
+        h: 'Usually not covered',
+        body: [
+          [
+            '**Flood:** water from outside, like rising rivers or heavy rain pouring in. That needs a separate flood policy, which renters can buy for belongings only.',
+            '**Sewer or drain backup,** unless you added [[water-backup]] coverage.',
+            '**Slow leaks and mold** that built up over time.',
+            '**The building itself:** walls, floors and the landlord\'s appliances are the landlord\'s to insure.',
+          ],
+        ],
+      },
+    ],
+    policies: ['renters', 'flood'],
+    situations: ['renting'],
+  },
+
+  {
+    slug: 'home-based-business-insurance',
+    q: 'Does my home insurance cover my home-based business?',
+    area: 'Business',
+    short: 'Barely. A home or renters policy usually covers business equipment only up to a small amount, often $2,500, and excludes liability for business activities. Most home businesses need an add-on or a small business policy.',
+    desc: 'Barely. Home and renters policies cover business equipment only up to a small amount and exclude business liability. Most home businesses need more.',
+    sections: [
+      {
+        h: 'What the home policy leaves out',
+        body: [
+          [
+            '**Equipment and inventory:** business property is capped low, and property away from home even lower.',
+            '**Liability:** a client who trips on your steps during a business visit, or a product you sold that hurts someone, is usually excluded.',
+            '**Lost income:** if a fire stops you working, the home policy doesn\'t replace business income.',
+          ],
+        ],
+      },
+      {
+        h: 'The usual fixes',
+        body: [
+          [
+            '**A home business endorsement** on your home policy: cheap, and enough for a small, low-risk business with few client visits.',
+            '**A [[bop|business owner\'s policy]]:** bundles business property, general liability and lost income. The common choice once you have stock, equipment or clients coming over.',
+            '**Professional liability** if clients could blame your advice or work for a loss.',
+          ],
+          'Tell your home insurer about the business either way. Hiding it can complicate a claim.',
+        ],
+      },
+    ],
+    policies: ['bop', 'home', 'renters', 'professional-liability'],
+    situations: ['starting-a-business'],
+  },
 ];
