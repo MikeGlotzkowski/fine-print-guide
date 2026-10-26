@@ -613,4 +613,101 @@ export const questions = [
     policies: ['bop', 'home', 'renters', 'professional-liability'],
     situations: ['starting-a-business'],
   },
+
+  {
+    slug: 'does-car-insurance-follow-the-car-or-the-driver',
+    q: 'Does car insurance follow the car or the driver?',
+    area: 'Cars',
+    short: 'Mostly the car. If you lend your car to a friend and they crash, your policy usually pays first. Their own car insurance may then pay on top if your limits run out.',
+    desc: 'Mostly the car. Lend your car and your policy usually pays first if your friend crashes. Their own policy may add more once your limits run out.',
+    sections: [
+      {
+        h: 'Lending your car',
+        body: [
+          [
+            'Your policy usually covers someone who drives your car with your permission, now and then.',
+            'A claim goes on your record and can raise your price, even though you weren\'t driving.',
+            'Someone who lives with you and drives your car regularly usually has to be listed on your policy. Leaving them off can lead to a denied claim.',
+          ],
+        ],
+      },
+      {
+        h: 'Borrowing someone else\'s car',
+        body: ['The owner\'s policy pays first. If the damage is bigger than their limits, your own liability coverage usually adds to it. Your [[collision]] coverage usually doesn\'t pay to repair a car you borrowed regularly, so check before relying on it.'],
+      },
+      {
+        h: 'When the rules change',
+        body: ['Some states and some policies differ, and many policies exclude drivers you name as excluded. Rental cars and cars used for deliveries or ride-hailing have their own rules.'],
+      },
+    ],
+    policies: ['auto'],
+    situations: ['buying-a-car'],
+  },
+
+  {
+    slug: 'what-is-an-hsa',
+    q: 'What is an HSA, and can I open one?',
+    area: 'Health',
+    short: 'A health savings account is a tax-free savings account for medical costs. You can open one only if you\'re covered by a high-deductible health plan that qualifies, and have no other health coverage that disqualifies you.',
+    desc: 'A health savings account is tax-free savings for medical costs. You can open one only with a qualifying high-deductible health plan.',
+    sections: [
+      {
+        h: 'How it works',
+        body: [
+          [
+            'Money you put in is tax-deductible, it grows tax-free, and withdrawals for medical costs are tax-free too.',
+            'The money is yours and rolls over every year, even if you change jobs or plans. That\'s the big difference from an [[fsa|FSA]].',
+            'The IRS sets a yearly contribution limit, and an employer may add money too.',
+          ],
+        ],
+      },
+      {
+        h: 'Who can open one',
+        body: [
+          [
+            'You must be covered by an [[hdhp|HSA-eligible high-deductible plan]]. The plan documents say if it qualifies.',
+            'You can\'t have other coverage that pays before the deductible, such as a regular health plan through a spouse.',
+            'You can\'t be enrolled in Medicare or claimed as someone else\'s tax dependent.',
+          ],
+        ],
+      },
+      {
+        h: 'Is it a good fit?',
+        body: ['It works best if you\'re healthy, can afford the higher [[deductible]] if something happens, and want to save for future medical costs. If you expect big bills this year, a plan with a lower deductible may cost less overall.'],
+      },
+    ],
+    policies: ['health'],
+    situations: ['new-to-the-us'],
+    links: ['[HealthCare.gov: health savings accounts](https://www.healthcare.gov/high-deductible-health-plan/hsa-eligible-plans/)'],
+  },
+
+  {
+    slug: 'personal-car-for-work-insurance',
+    q: 'Does my car insurance cover me if I use my car for work?',
+    area: 'Business',
+    short: 'Driving to and from work and the odd errand are usually covered. Deliveries, ride-hailing, carrying tools or goods, or a car owned by your business usually need extra or commercial coverage.',
+    desc: 'Commuting and the odd work errand are usually covered. Deliveries, ride-hailing or a car your business owns usually need extra or commercial coverage.',
+    sections: [
+      {
+        h: 'Usually fine on a personal policy',
+        body: [['Commuting to and from work.', 'Occasional errands like driving to a client meeting or the bank. Tell your insurer you use the car for business; it may change the price slightly.']],
+      },
+      {
+        h: 'Usually not covered',
+        body: [
+          [
+            '**Deliveries and ride-hailing:** personal policies usually exclude driving for pay. Ask for a rideshare or delivery endorsement, or check what the app company\'s insurance covers and when.',
+            '**Hauling tools, equipment or goods** as a regular part of your job.',
+            '**A car titled to your business:** it needs a commercial auto policy.',
+          ],
+        ],
+      },
+      {
+        h: 'When employees drive their own cars for you',
+        body: ['Their personal policy pays first. Your business can still be sued, so many businesses add hired and non-owned auto coverage ([[hnoa]]), often to a general liability or business owner\'s policy.'],
+      },
+    ],
+    policies: ['auto', 'commercial-auto'],
+    situations: ['starting-a-business'],
+  },
 ];
